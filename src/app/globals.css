@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --coal: #151515;
+  --ember: #d34b25;
+  --crust: #e9c88d;
+  color-scheme: dark;
+}
+
+@layer base {
+  html { background: var(--coal); scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-coal font-sans text-bone antialiased; }
+  ::selection { background: var(--ember); color: #fff; }
+  :focus-visible { outline: 2px solid var(--crust); outline-offset: 3px; }
+  h1, h2, h3 { text-wrap: balance; }
+  button:disabled { cursor: not-allowed; opacity: .45; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden bg-ember px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white transition;
+    box-shadow: 0 10px 40px -12px rgba(211, 75, 37, .8), inset 0 1px 0 rgba(255, 255, 255, .18);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  }
+  .btn-primary:hover:not(:disabled) { @apply bg-ember-400; }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 border border-crust/40 px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-crust transition hover:border-crust hover:bg-crust/10;
+  }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-megawide text-ember; }
+  .display-xl { @apply font-display uppercase leading-[0.86] tracking-tight; }
+  .stage {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(211, 75, 37, .16), transparent 70%),
+      linear-gradient(180deg, #1b1a19, #0f0f0f);
+    border: 1px solid rgba(233, 200, 141, .12);
+  }
+  .hairline { @apply border-white/10; }
+  .gold-text {
+    background: linear-gradient(180deg, #f6e3bd 0%, #e9c88d 45%, #b98b45 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .grain::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .option-tile { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
