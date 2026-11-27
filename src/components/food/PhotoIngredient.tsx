@@ -110,6 +110,17 @@ export function PhotoIngredient({ visual, region, seed, density, scale, drop, de
         };
       }).sort((a, b) => a.y - b.y);
     }
+    // Couche fine et large (kebab vu de profil) : une bande continue de petits amas qui se chevauchent.
+    if (region.rx / region.ry > 3) {
+      const h = region.ry * 1.25;
+      const n = Math.ceil(region.rx / (h * 0.9)) + 1;
+      return Array.from({ length: n }).map((_, i) => {
+        const x = region.cx - region.rx + h + (i / Math.max(1, n - 1)) * (region.rx * 2 - h * 2) + (r() - 0.5) * h * 0.4;
+        const y = region.cy + (r() - 0.5) * region.ry * 0.5;
+        const rr = h * (1.2 + r() * 0.35);
+        return { x, y, rot: (r() - 0.5) * 30, s: 1, d: blob(r, rr, h * (0.9 + r() * 0.2), 12, 0.25), tile: rr * 2.4 };
+      });
+    }
     // Amas : quelques grosses formes qui se chevauchent, plus des petites en bordure.
     const base = Math.min(region.rx, region.ry);
     const big = Math.max(3, Math.round(7 * Math.sqrt(area) * Math.min(1.6, density)));

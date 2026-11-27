@@ -4,6 +4,9 @@ import { useSafeReducedMotion } from '@/lib/useSafeReducedMotion';
 import { useEffect } from 'react';
 import { IngredientDefs } from './IngredientDefs';
 import { IngredientLayer, isSauce } from './IngredientLayer';
+import { PhotoTile, photoUrlFor } from './PhotoIngredient';
+import { PHOTOS } from '@/data/media';
+import { usePhoto } from '@/lib/usePhoto';
 import type { BuilderConfig, Selection, VisualKey } from '@/lib/types';
 
 export type KebabPhase = 'build' | 'close' | 'done';
@@ -39,6 +42,7 @@ export function KebabScene({ config, sel, phase, onPhaseEnd, still, p = 'kb' }: 
     return () => clearTimeout(t);
   }, [phase, reduce, onPhaseEnd]);
 
+  const breadPhoto = usePhoto(photoUrlFor('tortilla')) === 'ready' && !!PHOTOS.tortilla;
   const bread = config.steps[0].options.find((o) => o.id === sel.pain?.[0]);
   const b = bread ? BREADS[bread.visual] : null;
 
@@ -76,6 +80,13 @@ export function KebabScene({ config, sel, phase, onPhaseEnd, still, p = 'kb' }: 
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>
         <svg viewBox="0 0 600 440" className="h-full w-full overflow-visible" role="img" aria-label="Kebab en cours de composition">
           <defs>
+            {breadPhoto && PHOTOS.tortilla && (
+              <pattern id={`${p}-bphoto`} patternUnits="userSpaceOnUse" x={X0 - 20} y={BASE_Y - 220} width={440} height={440}>
+                <g transform="translate(220 220)">
+                  <PhotoTile size={440} src={{ ...PHOTOS.tortilla, tone: bread?.id === 'turc' ? 'sepia(.35) saturate(1.4) brightness(.82)' : bread?.id === 'galette' ? 'brightness(1.06)' : 'sepia(.15) saturate(1.15) brightness(.97)' }} />
+                </g>
+              </pattern>
+            )}
             <linearGradient id={`${p}-bread`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stopColor={b?.fill ?? '#3a3532'} />
               <stop offset="1" stopColor={b?.edge ?? '#2a2624'} />
@@ -97,7 +108,7 @@ export function KebabScene({ config, sel, phase, onPhaseEnd, still, p = 'kb' }: 
           {b ? (
             <motion.g key={bread?.id} initial={reduce ? false : { y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 180, damping: 16 }}>
               <path d={`M${X0},${BASE_Y} Q300,${BASE_Y + 22} ${X1},${BASE_Y} Q${X1 + 12},${BASE_Y + 14 * bt} ${X1 - 2},${BASE_Y + 28 * bt} Q300,${BASE_Y + 50 + 22 * bt} ${X0 + 2},${BASE_Y + 28 * bt} Q${X0 - 12},${BASE_Y + 14 * bt} ${X0},${BASE_Y}Z`}
-                fill={`url(#${p}-bread)`} stroke={b.edge} strokeWidth="1.5" />
+                fill={breadPhoto ? `url(#${p}-bphoto)` : `url(#${p}-bread)`} stroke={b.edge} strokeWidth="1.5" />
               {[140, 190, 250, 310, 370, 430, 470].map((x, i) => (
                 <ellipse key={i} cx={x} cy={BASE_Y + 22 * bt + 8 + (i % 2) * 4} rx="6" ry="2.4" fill={b.spot} opacity=".4" />
               ))}
@@ -119,7 +130,7 @@ export function KebabScene({ config, sel, phase, onPhaseEnd, still, p = 'kb' }: 
               <motion.g initial={false} animate={{ rotate: lidAngle, y: closed ? 2 : 0 }} style={{ originX: 0, originY: 1 }}
                 transition={{ type: 'spring', stiffness: 70, damping: 13, delay: closed && !reduce ? 0.1 : 0 }}>
                 <path d={`M0,0 Q200,${-40 - 14 * bt} 404,0 Q414,${8 * bt} 402,${16 * bt} Q200,${-14 * bt} 2,${16 * bt} Q-8,${8 * bt} 0,0Z`}
-                  fill={`url(#${p}-bread)`} stroke={b.edge} strokeWidth="1.5" transform={`translate(0 ${-16 * bt})`} />
+                  fill={breadPhoto ? `url(#${p}-bphoto)` : `url(#${p}-bread)`} stroke={b.edge} strokeWidth="1.5" transform={`translate(0 ${-16 * bt})`} />
                 {[60, 120, 190, 260, 320].map((x, i) => (
                   <ellipse key={i} cx={x} cy={-22 * bt - (i % 2 ? 6 : 2) - Math.sin((x / 404) * Math.PI) * 12} rx="7" ry="2.6" fill={b.spot} opacity=".45" />
                 ))}
