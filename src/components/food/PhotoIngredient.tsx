@@ -114,7 +114,7 @@ export function PhotoIngredient({ visual, region, seed, density, scale, drop, de
     const base = Math.min(region.rx, region.ry);
     const big = Math.max(2, Math.round(7 * Math.sqrt(area) * Math.min(1.6, density)));
     const out: { x: number; y: number; rot: number; s: number; d: string; tile: number }[] = [];
-    const rad = base * 0.6;
+    const rad = base * 0.66;
     for (let i = 0; i < big + 3; i++) {
       const small = i >= big;
       const a = r() * Math.PI * 2, dd = small ? 0.7 + r() * 0.25 : Math.sqrt(r()) * 0.7;
@@ -145,7 +145,7 @@ export function PhotoIngredient({ visual, region, seed, density, scale, drop, de
         <radialGradient id={`${uid}-shade`} cx=".42" cy=".38" r=".62">
           <stop offset="0" stopColor="#fff" stopOpacity=".1" />
           <stop offset=".6" stopColor="#000" stopOpacity="0" />
-          <stop offset="1" stopColor="#000" stopOpacity=".38" />
+          <stop offset="1" stopColor="#000" stopOpacity=".2" />
         </radialGradient>
         <filter id={`${uid}-sh`} x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation={piece ? 2 : 5} /></filter>
       </defs>
@@ -156,7 +156,7 @@ export function PhotoIngredient({ visual, region, seed, density, scale, drop, de
             animate={{ y: 0, opacity: 1, rotate: it.rot, scale: it.s }}
             transition={{ type: 'spring', stiffness: 240, damping: 20, mass: 0.8, delay: delay + i * (piece ? 0.03 : 0.06) }}
           >
-            <path d={it.d} fill="#000" opacity={piece ? 0.45 : 0.32} transform={`translate(${piece ? 1.5 : 3} ${piece ? 3 : 6})`} filter={`url(#${uid}-sh)`} />
+            <path d={it.d} fill="#000" opacity={piece ? 0.42 : 0.2} transform={`translate(${piece ? 1.5 : 3} ${piece ? 3 : 6})`} filter={`url(#${uid}-sh)`} />
             <path d={it.d} fill={`url(#${uid}-t${Math.round(it.tile)})`} mask={`url(#${uid}-m)`} />
             <path d={it.d} fill={`url(#${uid}-shade)`} mask={`url(#${uid}-m)`} />
           </motion.g>

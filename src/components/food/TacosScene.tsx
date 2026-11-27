@@ -23,7 +23,7 @@ const FLAPS = {
   right: `M${C + H},${C - W} A${R} ${R} 0 0 1 ${C + H},${C + W} Z`,
 };
 const FOLD_ORDER = ['top', 'bottom', 'left', 'right'] as const;
-const REGION = { cx: C, cy: C, rx: 128, ry: 128 };
+const REGION = { cx: C, cy: C, rx: 140, ry: 140 };
 
 export function TacosScene({ config, sel, phase, onPhaseEnd, still, p = 'tc', externalGrill }: {
   config: BuilderConfig; sel: Selection; phase: TacosPhase; onPhaseEnd?: (p: TacosPhase) => void; still?: boolean; p?: string;

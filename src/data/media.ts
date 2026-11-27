@@ -32,7 +32,7 @@ const P = (id: string, ext: PhotoSource['ext'], aspect: number, crop: PhotoSourc
 
 export const PHOTOS: Partial<Record<VisualKey | 'tortilla', PhotoSource>> = {
   doner: P('30328049', 'png', 0.6667, [0.39, 0.22, 0.2, 0.5], 'mass'),
-  chicken: P('6107757', 'jpeg', 0.6667, [0.03, 0.33, 0.48, 0.38], 'mass'),
+  chicken: P('6107757', 'jpeg', 0.6667, [0.05, 0.42, 0.3, 0.22], 'mass', 'sepia(.45) saturate(1.8) hue-rotate(-8deg) brightness(.92)'),
   minced: P('7340942', 'jpeg', 1.5038, [0.12, 0.25, 0.76, 0.58], 'mass'),
   tenders: P('9872916', 'jpeg', 1.5038, [0.22, 0.12, 0.6, 0.66], 'piece'),
   cordon: P('9872916', 'jpeg', 1.5038, [0.3, 0.2, 0.45, 0.5], 'piece'),

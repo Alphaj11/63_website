@@ -109,7 +109,7 @@ function SauceDrizzle({ visual, region, seed, delay, animated }: { visual: Visua
   const [base, hi] = SAUCE_COLORS[visual] ?? ['#eee', '#fff'];
   const d = useMemo(() => {
     const r = rng(hashString(seed + visual));
-    const k = 3.2 + r() * 1.6; // nombre d'allers-retours
+    const k = 2.3 + r() * 1.2; // nombre d'allers-retours
     const phase = r() * Math.PI * 2;
     const pts: string[] = [];
     const N = 90;
@@ -117,7 +117,7 @@ function SauceDrizzle({ visual, region, seed, delay, animated }: { visual: Visua
       const t = i / N;
       const y = region.cy - region.ry * 0.72 + t * region.ry * 1.44 + Math.sin(t * 40 + phase) * 2;
       const edge = Math.sqrt(Math.max(0.08, 1 - Math.pow((y - region.cy) / region.ry, 2)));
-      const x = region.cx + Math.sin(t * Math.PI * 2 * k + phase) * region.rx * 0.78 * edge + (r() - 0.5) * 3;
+      const x = region.cx + Math.sin(t * Math.PI * 2 * k + phase) * region.rx * (0.55 + 0.25 * Math.sin(t * 7 + phase)) * edge + (r() - 0.5) * 3;
       pts.push(`${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`);
     }
     return pts.join(' ');
@@ -130,10 +130,10 @@ function SauceDrizzle({ visual, region, seed, delay, animated }: { visual: Visua
       <defs><GlossFilter id={fid} /></defs>
       <motion.path d={d} fill="none" stroke="#000" strokeOpacity=".3" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" transform="translate(1 3)" filter={`url(#${fid}-sh)`}
         initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={tr} />
-      <g filter={`url(#${fid})`}>
-        <motion.path d={d} fill="none" stroke={base} strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round"
+      <g filter={`url(#${fid})`}><g filter={`url(#${fid}-wob)`}>
+        <motion.path d={d} fill="none" stroke={base} strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round"
           initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={tr} />
-      </g>
+      </g></g>
     </g>
   );
 }
@@ -156,6 +156,10 @@ export function GlossFilter({ id, scale = 3, blur = 1.8 }: { id: string; scale?:
         <feComposite in="lit2" in2="s2" operator="arithmetic" k1="0" k2="1" k3="0.85" k4="0" />
       </filter>
       <filter id={`${id}-sh`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2" /></filter>
+      <filter id={`${id}-wob`} x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="3" />
+        <feDisplacementMap in="SourceGraphic" scale="9" />
+      </filter>
     </>
   );
 }
@@ -200,10 +204,10 @@ function CheeseFlow({ p, region, seed, delay, animated }: { p: string; region: R
       </defs>
       <g filter={`url(#${fid})`}>
       <g filter={`url(#${fid}-wob)`}>
-      <motion.path d={blob} fill="#e9a427" opacity={0.74}
+      <motion.path d={blob} fill="#e9a427" opacity={0.6}
         style={{ transformBox: 'fill-box', transformOrigin: '50% 0%' }}
         initial={animated ? { scaleY: 0.05, scaleX: 0.6, opacity: 0 } : false}
-        animate={{ scaleY: 1, scaleX: 1, opacity: 0.74 }}
+        animate={{ scaleY: 1, scaleX: 1, opacity: 0.6 }}
         transition={{ duration: 1.3, ease: [0.3, 0.7, 0.2, 1], delay }} />
       {drips.map((dr, i) => (
         <motion.path key={i} d={`M${dr.x.toFixed(1)},${dr.y.toFixed(1)} l0,${dr.len.toFixed(1)}`} stroke="#e9a427" strokeWidth="8" strokeLinecap="round"
