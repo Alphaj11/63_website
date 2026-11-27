@@ -112,12 +112,14 @@ export function PhotoIngredient({ visual, region, seed, density, scale, drop, de
     }
     // Amas : quelques grosses formes qui se chevauchent, plus des petites en bordure.
     const base = Math.min(region.rx, region.ry);
-    const big = Math.max(2, Math.round(7 * Math.sqrt(area) * Math.min(1.6, density)));
+    const big = Math.max(3, Math.round(7 * Math.sqrt(area) * Math.min(1.6, density)));
     const out: { x: number; y: number; rot: number; s: number; d: string; tile: number }[] = [];
-    const rad = base * 0.66;
+    // Petites zones (assiette, crudités) : un vrai tas compact plutôt que des amas épars.
+    const compact = area < 0.35;
+    const rad = base * (compact ? 0.9 : 0.66);
     for (let i = 0; i < big + 3; i++) {
       const small = i >= big;
-      const a = r() * Math.PI * 2, dd = small ? 0.7 + r() * 0.25 : Math.sqrt(r()) * 0.7;
+      const a = r() * Math.PI * 2, dd = (small ? 0.7 + r() * 0.25 : Math.sqrt(r()) * 0.7) * (compact ? 0.55 : 1);
       const rr = rad * (small ? 0.45 + r() * 0.2 : 0.8 + r() * 0.35);
       out.push({
         x: region.cx + Math.cos(a) * dd * (region.rx - rr * 0.6),
