@@ -1,0 +1,8 @@
+node_modules
+dist
+*.local
+
+# Originaux photo (lourds) : seules les versions optimisées de src/assets sont versionnées
+media-src/**/*.jpg
+media-src/**/*.jpeg
+media-src/**/*.png
