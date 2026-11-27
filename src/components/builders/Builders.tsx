@@ -1,4 +1,7 @@
 'use client';
+import { useState } from 'react';
+import { GrillVideo } from '@/components/food/GrillVideo';
+import { useSafeReducedMotion } from '@/lib/useSafeReducedMotion';
 import { BuilderShell } from './BuilderShell';
 import { TacosScene, type TacosPhase } from '@/components/food/TacosScene';
 import { KebabScene, type KebabPhase } from '@/components/food/KebabScene';
@@ -7,12 +10,20 @@ import { PlateScene, type PlatePhase } from '@/components/food/PlateScene';
 import { builders } from '@/data/menu';
 
 export function TacosBuilder() {
+  const reduce = useSafeReducedMotion();
+  // Séquence vidéo réelle au grill ; repli sur l'animation vectorielle si elle ne peut pas être lue.
+  const [videoFailed, setVideoFailed] = useState(false);
+  const useVideo = !reduce && !videoFailed;
   return (
     <BuilderShell config={builders.tacos} finale={['fold', 'grill']}
       finaleLabels={{ fold: { fr: 'On replie…', en: 'Folding…' }, grill: { fr: 'Passage au grill…', en: 'On the grill…' } }}
       renderScene={({ sel, phase, onPhaseEnd }) => (
-        <TacosScene config={builders.tacos} sel={sel} phase={phase as TacosPhase} onPhaseEnd={onPhaseEnd as (p: TacosPhase) => void} />
-      )} />
+        <TacosScene config={builders.tacos} sel={sel} phase={phase as TacosPhase} onPhaseEnd={onPhaseEnd as (p: TacosPhase) => void} externalGrill={useVideo} />
+      )}
+      renderOverlay={useVideo ? ({ sel, phase, onPhaseEnd }) => (
+        <GrillVideo active={phase === 'grill'} hold={phase === 'done'} warm={(sel.viandes?.length ?? 0) > 0}
+          onEnd={() => onPhaseEnd('grill')} onFail={() => setVideoFailed(true)} />
+      ) : undefined} />
   );
 }
 

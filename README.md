@@ -11,7 +11,7 @@ Prototype interactif du site de **Kebab Grill House 63** (40 rue de Marseille, 6
 | Fonction | État |
 |---|---|
 | Accueil cinématographique (broche 3D WebGL, lumière rouge, fumée, braises, mouvement de caméra) | ✅ Intro de ~4 s, « Passer l'intro », jamais rejouée dans la session, alternative 2D sans WebGL / mouvement réduit |
-| Configurateur **tacos** signature (ingrédients qui tombent, sauce fromagère qui coule, pliage, presse au grill, marques de grill, tacos doré) | ✅ |
+| Configurateur **tacos** signature : ingrédients en **textures photo réelles**, sauces nappées brillantes, pliage, puis **séquence vidéo réelle** au grill (mains, presse, sortie dorée), passable | ✅ Médias d'illustration Pexels, à remplacer par ceux du restaurant |
 | Configurateurs **kebab** (empilement + fermeture + papier), **kumpir** (ouverture, beurre, fromage, garnitures), **assiette** (dressage par zones) | ✅ |
 | Prix recalculé à chaque choix, récapitulatif, ajout / modification / suppression / quantités | ✅ |
 | Panier persistant (navigation et rechargement), sur place / à emporter (option à confirmer), page de validation simulée | ✅ |

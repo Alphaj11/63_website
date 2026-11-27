@@ -4,6 +4,8 @@ import { useSafeReducedMotion } from '@/lib/useSafeReducedMotion';
 import { useMemo } from 'react';
 import { hashString, rng } from '@/lib/rng';
 import type { VisualKey } from '@/lib/types';
+import { usePhoto } from '@/lib/usePhoto';
+import { PhotoIngredient, photoUrlFor } from './PhotoIngredient';
 
 export interface Region { cx: number; cy: number; rx: number; ry: number }
 
@@ -74,7 +76,14 @@ export function IngredientLayer({ p, visual, region, seed, density = 1, scale = 
     return out.sort((a, b) => a.y - b.y);
   }, [seed, visual, region.cx, region.cy, region.rx, region.ry, density, scale, squash, count]);
 
+  const photo = usePhoto(photoUrlFor(visual));
+
   if (visual === 'none' || visual === 'size') return null;
+  if (photo === 'ready') {
+    return <PhotoIngredient visual={visual} region={region} seed={seed} density={density} scale={scale} drop={drop} delay={delay} squash={squash} count={count} animated={animated} />;
+  }
+  // Photo en cours de chargement : on attend (préchargée à l'ouverture du configurateur) ; en cas d'échec, dessin vectoriel.
+  if (photo === 'loading') return null;
   if (isSauce(visual)) return <SauceDrizzle visual={visual} region={region} seed={seed} delay={delay} animated={animated} />;
   if (visual === 'cheesesauce') return <CheeseFlow p={p} region={region} seed={seed} delay={delay} animated={animated} />;
 
@@ -115,15 +124,39 @@ function SauceDrizzle({ visual, region, seed, delay, animated }: { visual: Visua
   }, [seed, visual, region.cx, region.cy, region.rx, region.ry]);
 
   const tr = { duration: 1.1, ease: [0.45, 0, 0.2, 1] as const, delay };
+  const fid = `gl${hashString(seed + visual).toString(36)}`;
   return (
     <g>
-      <motion.path d={d} fill="none" stroke="#000" strokeOpacity=".22" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" transform="translate(0 2)"
+      <defs><GlossFilter id={fid} /></defs>
+      <motion.path d={d} fill="none" stroke="#000" strokeOpacity=".3" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" transform="translate(1 3)" filter={`url(#${fid}-sh)`}
         initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={tr} />
-      <motion.path d={d} fill="none" stroke={base} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"
-        initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={tr} />
-      <motion.path d={d} fill="none" stroke={hi} strokeOpacity=".6" strokeWidth="1.3" strokeLinecap="round" transform="translate(-0.8 -1.2)"
-        initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={tr} />
+      <g filter={`url(#${fid})`}>
+        <motion.path d={d} fill="none" stroke={base} strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round"
+          initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={tr} />
+      </g>
     </g>
+  );
+}
+
+/** Rendu « nappé » : relief et reflet spéculaire (aspect brillant d'une vraie sauce). */
+export function GlossFilter({ id, scale = 3, blur = 1.8 }: { id: string; scale?: number; blur?: number }) {
+  return (
+    <>
+      <filter id={id} x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+        <feGaussianBlur in="SourceAlpha" stdDeviation={blur} result="b" />
+        <feSpecularLighting in="b" surfaceScale={scale} specularConstant="1" specularExponent="26" lightingColor="#fffaf0" result="s">
+          <feDistantLight azimuth="235" elevation="48" />
+        </feSpecularLighting>
+        <feComposite in="s" in2="SourceAlpha" operator="in" result="s2" />
+        <feDiffuseLighting in="b" surfaceScale={scale} diffuseConstant="1" lightingColor="#fff" result="dl">
+          <feDistantLight azimuth="235" elevation="60" />
+        </feDiffuseLighting>
+        <feComposite in="SourceGraphic" in2="dl" operator="arithmetic" k1="0.55" k2="0.5" k3="0" k4="0" result="lit" />
+        <feComposite in="lit" in2="SourceAlpha" operator="in" result="lit2" />
+        <feComposite in="lit2" in2="s2" operator="arithmetic" k1="0" k2="1" k3="0.85" k4="0" />
+      </filter>
+      <filter id={`${id}-sh`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2" /></filter>
+    </>
   );
 }
 
@@ -155,19 +188,29 @@ function CheeseFlow({ p, region, seed, delay, animated }: { p: string; region: R
     return { blob: d, drips: ds };
   }, [seed, region.cx, region.cy, region.rx, region.ry]);
 
+  const fid = `ch${hashString(seed).toString(36)}`;
   return (
     <g>
-      <motion.path d={blob} fill={`url(#${p}-g-cheese)`} opacity={0.66}
+      <defs>
+        <GlossFilter id={fid} scale={4} blur={3} />
+        <filter id={`${fid}-wob`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" />
+          <feDisplacementMap in="SourceGraphic" scale="14" />
+        </filter>
+      </defs>
+      <g filter={`url(#${fid})`}>
+      <g filter={`url(#${fid}-wob)`}>
+      <motion.path d={blob} fill="#e9a427" opacity={0.74}
         style={{ transformBox: 'fill-box', transformOrigin: '50% 0%' }}
         initial={animated ? { scaleY: 0.05, scaleX: 0.6, opacity: 0 } : false}
-        animate={{ scaleY: 1, scaleX: 1, opacity: 0.66 }}
+        animate={{ scaleY: 1, scaleX: 1, opacity: 0.74 }}
         transition={{ duration: 1.3, ease: [0.3, 0.7, 0.2, 1], delay }} />
-      <motion.path d={blob} fill="none" stroke="#fff3c0" strokeOpacity=".55" strokeWidth="2" transform="translate(-2 -3) scale(1)"
-        initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={{ duration: 1.2, delay: delay + 0.5 }} />
       {drips.map((dr, i) => (
-        <motion.path key={i} d={`M${dr.x.toFixed(1)},${dr.y.toFixed(1)} l0,${dr.len.toFixed(1)}`} stroke="#f5bd3c" strokeWidth="6" strokeLinecap="round"
+        <motion.path key={i} d={`M${dr.x.toFixed(1)},${dr.y.toFixed(1)} l0,${dr.len.toFixed(1)}`} stroke="#e9a427" strokeWidth="8" strokeLinecap="round"
           initial={animated ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={{ duration: 0.9, delay: delay + 0.9 + i * 0.12 }} />
       ))}
+      </g>
+      </g>
     </g>
   );
 }

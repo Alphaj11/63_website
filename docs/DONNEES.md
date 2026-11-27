@@ -38,6 +38,17 @@ Les cadres « Emplacement photo réelle » de *Notre univers* (`src/components/R
 Déposer les fichiers dans `public/media/` (WebP/AVIF pour les photos, MP4 H.264 + WebM pour les vidéos, < 2 Mo si possible) et remplacer le motif SVG du cadre par une balise `<img loading="lazy">` ou `<video muted playsInline autoPlay loop>`.
 Les visuels actuels sont des **illustrations**, ils ne prétendent pas représenter le restaurant.
 
+### Photos et vidéos d'illustration (configurateurs)
+
+Pour rendre la composition réaliste, les ingrédients sont rendus à partir de **vraies photos** et le passage au grill du tacos est une **séquence vidéo réelle** (mains qui posent le tacos dans le grill, presse, sortie doré). Ces médias proviennent de la banque **Pexels** (licence libre, usage commercial autorisé, sans attribution obligatoire) et sont listés dans `src/data/media.ts` :
+
+- `PHOTOS` : une photo par ingrédient, avec la zone utile (`crop`) et le mode de rendu (`mass` = en vrac, `piece` = morceaux découpés).
+- `GRILL_SEQUENCE` : les plans vidéo du final tacos (début / fin de chaque extrait) ; `GRILL_HOLD_AT` : l'image figée finale.
+
+Ils **ne représentent pas** les produits du restaurant et sont signalés comme illustrations sur le site. Pour les remplacer : déposer les fichiers du restaurant dans `public/media/` puis pointer `PHOTOS` / `GRILL_SEQUENCE` vers ces fichiers. Idéalement, filmer en cuisine : la tortilla garnie, le pliage, la mise au grill, la sortie dorée (plans de 3 à 6 s, horizontaux).
+
+Si un média ne se charge pas (hors ligne, blocage réseau), le site revient automatiquement aux illustrations vectorielles.
+
 ## 6. Textes de présentation
 
 Les textes de *Notre univers* décrivent une intention (générosité, grill, accueil). Ils sont à relire et valider par l'établissement. N'ajouter ni témoignage, ni label, ni certification non vérifiés.

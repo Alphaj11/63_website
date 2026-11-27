@@ -3,6 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { preloadPhotos, usePhoto } from '@/lib/usePhoto';
+import { PhotoTile, photoUrlFor } from '@/components/food/PhotoIngredient';
+import { MEDIA_CREDIT, PHOTOS } from '@/data/media';
 import { IngredientDefs } from '@/components/food/IngredientDefs';
 import { SAUCE_COLORS } from '@/components/food/IngredientLayer';
 import { DemoBadge } from '@/components/ui/DemoBadge';
@@ -23,11 +26,13 @@ interface Props {
   finale: string[];
   finaleLabels: Record<string, { fr: string; en: string }>;
   renderScene: (props: SceneProps) => ReactNode;
+  /** Calque plein cadre au-dessus de la scène (ex. séquence vidéo du final). */
+  renderOverlay?: (props: SceneProps) => ReactNode;
   /** Ratio de la scène (hauteur/largeur). */
   aspect?: string;
 }
 
-export function BuilderShell({ config, finale, finaleLabels, renderScene, aspect = 'aspect-square' }: Props) {
+export function BuilderShell({ config, finale, finaleLabels, renderScene, renderOverlay, aspect = 'aspect-square' }: Props) {
   const { lang, t } = useT();
   const router = useRouter();
   const params = useSearchParams();
@@ -44,6 +49,15 @@ export function BuilderShell({ config, finale, finaleLabels, renderScene, aspect
     if (editingLine?.selection) { setSel(editingLine.selection); setStepIdx(config.steps.length - 1); setPhase('build'); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingLine?.lineId]);
+
+  // Précharge les photos d'ingrédients de ce configurateur (rendu réaliste dès le premier choix).
+  useEffect(() => {
+    const urls = new Set<string>();
+    const tortilla = photoUrlFor('tortilla');
+    if (config.kind === 'tacos' && tortilla) urls.add(tortilla);
+    config.steps.forEach((s) => s.options.forEach((o) => { const u = photoUrlFor(o.visual); if (u) urls.add(u); }));
+    preloadPhotos([...urls]);
+  }, [config]);
 
   const step = config.steps[stepIdx];
   const price = computePrice(config, sel);
@@ -117,7 +131,9 @@ export function BuilderShell({ config, finale, finaleLabels, renderScene, aspect
                 </motion.div>
               )}
             </AnimatePresence>
+            {renderOverlay?.({ sel, phase, onPhaseEnd })}
           </div>
+          <p className="mt-2 hidden text-[10px] leading-snug text-bone/35 lg:block">{t(MEDIA_CREDIT)}</p>
         </div>
 
         {/* ---------- Panneau de choix ---------- */}
@@ -208,6 +224,7 @@ export function BuilderShell({ config, finale, finaleLabels, renderScene, aspect
                   <button type="button" onClick={restart} className="btn-ghost">{t(ui.builder.restart)}</button>
                 </div>
                 <p className="mt-6 text-xs text-bone/40">{t(ui.demo.menu)}</p>
+                <p className="mt-1 text-xs text-bone/30 lg:hidden">{t(MEDIA_CREDIT)}</p>
                 <Link href="/composer/" className="mt-4 inline-block text-sm text-crust underline-offset-4 hover:underline">← {t({ fr: 'Composer autre chose', en: 'Build something else' })}</Link>
               </motion.div>
             )}
@@ -235,6 +252,15 @@ export function BuilderShell({ config, finale, finaleLabels, renderScene, aspect
 
 function OptionIcon({ option }: { option: BuilderOption }) {
   const v = option.visual;
+  const src = PHOTOS[v];
+  const photo = usePhoto(src ? photoUrlFor(v) : null);
+  if (src && photo === 'ready') {
+    return (
+      <svg viewBox="-20 -20 40 40" className="h-9 w-9 rounded-full ring-1 ring-white/20 shadow-[0_4px_10px_rgba(0,0,0,.5)]" aria-hidden>
+        <PhotoTile src={src} size={40} />
+      </svg>
+    );
+  }
   if (v.startsWith('sauce-') || v === 'cheesesauce') {
     const c = v === 'cheesesauce' ? '#f5bd3c' : (SAUCE_COLORS[v]?.[0] ?? option.swatch ?? '#ccc');
     return <span className="h-7 w-7 rounded-full border border-white/20 shadow-inner" style={{ background: `radial-gradient(circle at 35% 30%, #fff8, ${c} 45%)` }} />;
