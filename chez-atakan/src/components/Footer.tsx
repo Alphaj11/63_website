@@ -43,6 +43,7 @@ export function Footer() {
       <div className="mx-auto mt-12 max-w-7xl space-y-2 px-4 text-xs text-ash sm:px-6">
         {DEMO_MODE && <p>Site de démonstration : les commandes ne sont pas transmises et aucun paiement n’est effectué.</p>}
         <p>Tarifs relevés sur la carte du restaurant, donnés à titre indicatif.</p>
+        <p>Photos d’illustration (banque d’images sous licence) : la présentation réelle des plats peut différer.</p>
         {credits.length > 0 && (
           <details>
             <summary className="cursor-pointer hover:text-cream">Crédits photo</summary>

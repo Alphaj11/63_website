@@ -95,13 +95,43 @@ Règle : **uniquement des photos réelles ou photoréalistes, sous licence perme
 - Un même aliment garde la même photo partout grâce aux alias de `media.ts` (ex. la viande du configurateur = celle des fiches produit).
 - Tant qu'une photo manque, un cadre neutre « photo à venir » s'affiche.
 
-Les meilleures photos resteront celles du restaurant lui-même (broche, pain, produits réels).
+Les photos actuelles sont des **photos d'illustration** issues d'Unsplash (licence Unsplash : usage commercial autorisé, sans obligation d'attribution, crédits fournis quand même). Le pied de page le précise. Les meilleures photos resteront celles du restaurant lui-même (broche, pain, produits réels).
 
 ### Crédits photo
 
 | Clé | Auteur | Source | Licence |
 |---|---|---|---|
-| _(à compléter lors de l'intégration des photos)_ | | | |
+| `hero-broche` | engin akyurt | [Unsplash](https://unsplash.com/photos/Vq995Fnrw4A) | Licence Unsplash |
+| `story-broche` | Francis Ledger | [Unsplash](https://unsplash.com/photos/orIQn6nszgo) | Licence Unsplash |
+| `story-preparation` | Taeyoon Moon | [Unsplash](https://unsplash.com/photos/TA2we7vayGU) | Licence Unsplash |
+| `story-pain` | Maite Paternain | [Unsplash](https://unsplash.com/photos/UVNguozJOPE) | Licence Unsplash |
+| `story-generosite` | Gang Hao | [Unsplash](https://unsplash.com/photos/gM5Bdzp7LhY) | Licence Unsplash |
+| `story-frais` | Andres Carreno | [Unsplash](https://unsplash.com/photos/RqS7r2CzL68) | Licence Unsplash |
+| `meat-kebab` | engin akyurt | [Unsplash](https://unsplash.com/photos/9Lsxip60s20) | Licence Unsplash |
+| `meat-poulet` | aly | [Unsplash](https://unsplash.com/photos/0dW1rNcbadM) | Licence Unsplash |
+| `meat-steak` | Izzy Park | [Unsplash](https://unsplash.com/photos/OKBCiPpTHag) | Licence Unsplash |
+| `meat-tenders` | Léo Roza | [Unsplash](https://unsplash.com/photos/P_z_xlMGuEk) | Licence Unsplash |
+| `meat-nuggets` | Dynamic Wang | [Unsplash](https://unsplash.com/photos/WScUzPUGkQQ) | Licence Unsplash |
+| `meat-cordon-bleu` | Mark König | [Unsplash](https://unsplash.com/photos/MyfbM2QYF4o) | Licence Unsplash |
+| `product-kebab` | Yoad Shejtman | [Unsplash](https://unsplash.com/photos/sPmF7MNzdnU) | Licence Unsplash |
+| `product-galette` | Anima Visual | [Unsplash](https://unsplash.com/photos/jhTzMj5aJQk) | Licence Unsplash |
+| `product-chicken-tikka` | Alexander Mils | [Unsplash](https://unsplash.com/photos/SNLfVYmL8os) | Licence Unsplash |
+| `product-royal` | Bayuaji Abiyu | [Unsplash](https://unsplash.com/photos/xq04aTV-LVk) | Licence Unsplash |
+| `product-blinde` | Bayuaji Abiyu | [Unsplash](https://unsplash.com/photos/_JIRNUeDGy8) | Licence Unsplash |
+| `product-tacos` | Omar Hakeem | [Unsplash](https://unsplash.com/photos/APbsVh624WA) | Licence Unsplash |
+| `product-bowl` | Rimsha Noor | [Unsplash](https://unsplash.com/photos/1RE1sDbR4Go) | Licence Unsplash |
+| `product-burger` | amirali mirhashemian | [Unsplash](https://unsplash.com/photos/MNHQqLNEvow) | Licence Unsplash |
+| `product-double-burger` | amirali mirhashemian | [Unsplash](https://unsplash.com/photos/jh5XyK4Rr3Y) | Licence Unsplash |
+| `product-triple-burger` | Sol Ingrao | [Unsplash](https://unsplash.com/photos/j1NmLRIlJGI) | Licence Unsplash |
+| `product-chicken-burger` | David Foodphototasty | [Unsplash](https://unsplash.com/photos/VFVnZfogE7s) | Licence Unsplash |
+| `product-double-chicken` | Sultan Abdulrazzaq | [Unsplash](https://unsplash.com/photos/UDYjeBwFZf8) | Licence Unsplash |
+| `product-nuggets` | Stu Moffat | [Unsplash](https://unsplash.com/photos/xTJSYt4doqo) | Licence Unsplash |
+| `product-nuggets-10` | Lee Milo | [Unsplash](https://unsplash.com/photos/bG8sQGD8Bi8) | Licence Unsplash |
+| `product-menu-enfant` | Tyson | [Unsplash](https://unsplash.com/photos/UmkODKl4E1M) | Licence Unsplash |
+| `product-frites` | Mitchell Luo | [Unsplash](https://unsplash.com/photos/ChXHveqrb28) | Licence Unsplash |
+| `product-grande-frite` | Cindy Bartillon | [Unsplash](https://unsplash.com/photos/-doMDpFipzQ) | Licence Unsplash |
+| `extra-oeuf` | Jonathan Cooper | [Unsplash](https://unsplash.com/photos/Bl2PZj_TgpE) | Licence Unsplash |
+| `extra-galette-pdt` | tommao wang | [Unsplash](https://unsplash.com/photos/Dut3u5zJ0vE) | Licence Unsplash |
 
 ## Architecture
 

@@ -36,27 +36,10 @@ for (const [path, url] of Object.entries(files)) {
 
 /** Alias : un produit peut réutiliser la photo d'un autre pour rester cohérent. */
 const aliases: Record<string, string> = {
-  'hero-broche': 'meat-kebab',
-  'story-broche': 'meat-kebab',
-  'story-pain': 'product-kebab',
-  'story-generosite': 'product-big',
-  'story-preparation': 'product-tacos',
-  'story-frais': 'product-bowl',
-  'product-nuggets-10': 'product-nuggets',
-  'product-grande-frite': 'product-frites',
-  'product-double-chicken': 'product-chicken-burger',
-  'product-triple-burger': 'product-double-burger',
-  'product-duo-burger': 'product-double-burger',
-  'product-galette': 'product-kebab',
-  'product-royal': 'product-kebab',
-  'product-blinde': 'product-kebab',
+  // Composition non communiquée : on réutilise la photo du produit le plus proche.
   'product-big': 'product-kebab',
-  'product-double-steak': 'product-burger',
-  'product-chicken-tikka': 'meat-poulet',
-  'product-bowl': 'meat-kebab',
-  'product-tacos': 'meat-poulet',
-  'product-menu-enfant': 'product-nuggets',
-  'meat-cordon-bleu': 'meat-tenders',
+  'product-duo-burger': 'product-double-burger',
+  'product-double-steak': 'meat-steak',
 };
 
 export function media(key: string): MediaSource | null {
