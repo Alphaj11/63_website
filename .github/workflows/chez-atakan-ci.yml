@@ -1,0 +1,28 @@
+name: Chez Atakan — vérifications
+
+on:
+  pull_request:
+    paths: ['chez-atakan/**', '.github/workflows/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: chez-atakan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: chez-atakan/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_BASE: /63_website/chez-atakan/

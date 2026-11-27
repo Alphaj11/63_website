@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            chez-atakan/package-lock.json
       - run: npm ci
       - run: npm test
       - name: Build (export statique)
@@ -33,6 +36,20 @@ jobs:
           # Variables publiques facultatives (Settings → Secrets and variables → Actions → Variables)
           NEXT_PUBLIC_REVIEWS_ENDPOINT: ${{ vars.NEXT_PUBLIC_REVIEWS_ENDPOINT }}
           NEXT_PUBLIC_GOOGLE_PLACE_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_PLACE_ID }}
+      # ── Chez Atakan (Vite) : publié à côté, sous /63_website/chez-atakan/ ──
+      - name: Chez Atakan — installation et tests
+        working-directory: chez-atakan
+        run: |
+          npm ci
+          npm test
+      - name: Chez Atakan — build
+        working-directory: chez-atakan
+        run: npm run build
+        env:
+          VITE_BASE: /63_website/chez-atakan/
+          VITE_DEMO_MODE: 'true'
+      - name: Chez Atakan — ajout au site publié
+        run: cp -r chez-atakan/dist out/chez-atakan
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

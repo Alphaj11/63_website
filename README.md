@@ -1,5 +1,7 @@
 # GRILL HOUSE 63 — Enter the Grill Experience
 
+> Ce dépôt contient aussi le site **Chez Atakan** (Saint-Estève), dans [`chez-atakan/`](chez-atakan/README.md), publié sous `/63_website/chez-atakan/`.
+
 Prototype interactif du site de **Kebab Grill House 63** (40 rue de Marseille, 69007 Lyon), conçu comme démonstration commerciale.
 
 **Digital experience by QAMAR CONCEPTION.**
